@@ -64,36 +64,37 @@ class TestLocalizeSuperq : public RFModule, TestLocalizer_IDL
       double t0=Time::now();
       for (size_t i=0; i<objects.size(); i++)
       {
-          askPointCloud(objects[i]);
-
-          Bottle cmd, reply;
-          Vector superquadric(11,0.0);
-
-          cmd.addString("localize_superq");
-          Bottle &list_objs=cmd.addList();
-          for (size_t i=0; i< objects.size(); i++)
+          if (askPointCloud(objects[i]))
           {
-              list_objs.addString(objects[i]);
+              Bottle cmd, reply;
+              Vector superquadric(11,0.0);
+
+              cmd.addString("localize_superq");
+              cmd.addString(objects[i]);
+
+              Bottle &list_points=cmd.addList();
+
+              list_points = point_cloud.toBottle();
+
+              superquadric=superq_rpc.write(cmd, reply);
+
+              superqs.push_back(superquadric);
           }
-
-          Bottle &list_points=cmd.addList();
-
-          for (size_t i=0; i< point_cloud.size(); i++)
+          else
           {
-              Bottle &point=list_points.addList();
-              point.addDouble(point_cloud(i).x);
-              point.addDouble(point_cloud(i).y);
-              point.addDouble(point_cloud(i).z);
+              yError()<< "Error in receiving the point cloud!";
           }
-
-          superquadric=superq_rpc.write(cmd, reply);
-
-          superqs.push_back(superquadric);
       }
 
-      double t1=Time::now();
+      if (superqs.size() == objects.size())
+      {
+          double t1=Time::now();
 
-      yInfo() << "Total time for modeling" << objects.size() << "objects is" << t1 - t0;
+          yInfo() << "Total time for modeling" << objects.size() << "objects is" << t1 - t0;
+          return true;
+      }
+      else
+          return false;
   }
 
   /****************************************************************/
