@@ -69,11 +69,26 @@ class TestLocalizeSuperq : public RFModule, TestLocalizer_IDL
           Bottle cmd, reply;
           Vector superquadric(11,0.0);
 
-          // TODO Check how to send commands to thrift via code
-          // point_cloud to be send. It is filled inside askPointCloud
-          //superquadric =
+          cmd.addString("localize_superq");
+          Bottle &list_objs=cmd.addList();
+          for (size_t i=0; i< objects.size(); i++)
+          {
+              list_objs.addString(objects[i]);
+          }
 
-         superqs.push_back(superquadric);
+          Bottle &list_points=cmd.addList();
+
+          for (size_t i=0; i< point_cloud.size(); i++)
+          {
+              Bottle &point=list_points.addList();
+              point.addDouble(point_cloud(i).x);
+              point.addDouble(point_cloud(i).y);
+              point.addDouble(point_cloud(i).z);
+          }
+
+          superquadric=superq_rpc.write(cmd, reply);
+
+          superqs.push_back(superquadric);
       }
 
       double t1=Time::now();
