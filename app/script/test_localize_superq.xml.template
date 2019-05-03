@@ -1,0 +1,78 @@
+<application>
+    <name>Test Localize Superquadric</name>
+
+    <dependencies>
+        <port>/instanceSegmenter/rpc</port>
+        <port>/memory/rpc</port>
+    </dependencies>
+
+    <module>
+        <name>test-localize-superq</name>
+        <node>localhost</node>
+    </module>
+
+    <module>
+        <name>localize-superquadric</name>
+        <node>localhost</node>
+    </module>
+
+    <module>
+        <name>point-cloud-read</name>
+        <node>localhost</node>
+    </module>
+
+    <connection>
+        <from>/test-localize-superq/pointCloud:rpc</from>
+        <to>/pointCloudRead/rpc</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/pointCloudRead/segmrpc</from>
+        <to>/instanceSegmenter/rpc</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/localize-superquadric/opc:rpc</from>
+        <to>/memory/rpc</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/pointCloudRead/OPCrpc</from>
+        <to>/memory/rpc</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/pointCloudRead/SFMrpc</from>
+        <to>/SFM/rpc</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/test-localize-superq/localizeSuperq:rpc</from>
+        <to>/localize-superquadric/service:rpc</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/icub/camcalib/left/out</from>
+        <to>/instanceSegmenter/RGBimage:i</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/instanceSegmenter/bboxes:o</from>
+        <to>/iolStateMachineHandler/blobs:i</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/instanceSegmenter/RGBimage:o</from>
+        <to>/iolViewer/lbpSegmented</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+</application>

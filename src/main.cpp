@@ -63,19 +63,27 @@ class TestLocalizeSuperq : public RFModule, TestLocalizer_IDL
   {
       double t0=Time::now();
 
+      Bottle cmd, reply;
+
+      cmd.addString("reset_visualization");
+
+      superq_rpc.write(cmd, reply);
+
       for (size_t i=0; i<objects.size(); i++)
       {
           if (askPointCloud(objects[i]))
           {
-              Bottle cmd, reply;
               Vector superquadric(11,0.0);
 
+              cmd.clear();
               cmd.addString("localize_superq");
               cmd.addString(objects[i]);
 
               Bottle &list_points=cmd.addList();
 
               list_points = point_cloud.toBottle();
+
+              cmd.addInt(i);
 
               superquadric=superq_rpc.write(cmd, reply);
 
