@@ -75,4 +75,22 @@
         <protocol>fast_tcp</protocol>
     </connection>
 
+     <connection>
+        <from>/icub/camcalib/left/out</from>
+        <to>/pointCloudRead/imgL:i</to>
+        <protocol>udp</protocol>
+    </connection>
+
+    <connection>
+        <from>/pointCloudRead/OPCrpc</from>
+        <to>/memory/rpc</to>
+        <protocol>tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/pointCloudRead/SFMrpc</from>
+        <to>/SFM/rpc</to>
+        <protocol>tcp</protocol>
+    </connection>
+
 </application>
