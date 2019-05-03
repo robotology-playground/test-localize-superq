@@ -62,6 +62,7 @@ class TestLocalizeSuperq : public RFModule, TestLocalizer_IDL
   bool compute_multiple_superqs(const vector<string> &objects)
   {
       double t0=Time::now();
+
       for (size_t i=0; i<objects.size(); i++)
       {
           if (askPointCloud(objects[i]))
@@ -82,14 +83,13 @@ class TestLocalizeSuperq : public RFModule, TestLocalizer_IDL
           }
           else
           {
-              yError()<< "Error in receiving the point cloud!";
+              yError()<< "Error in receiving the point cloud for object:" << objects[i] << "!";
           }
       }
 
       if (superqs.size() == objects.size())
       {
           double t1=Time::now();
-
           yInfo() << "Total time for modeling" << objects.size() << "objects is" << t1 - t0;
           return true;
       }
@@ -112,6 +112,7 @@ class TestLocalizeSuperq : public RFModule, TestLocalizer_IDL
           yError() << "askPointCloud: no connection to point cloud module";
           return false;
       }
+      
       point_cloud_rpc.write(cmd_request, cmd_reply);
 
       Bottle* pcBt = cmd_reply.get(0).asList();
