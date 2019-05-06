@@ -7,12 +7,13 @@
     </dependencies>
 
     <module>
-        <name>test-localize-superq</name>
+        <name>test-localize-superquadric</name>
         <node>localhost</node>
     </module>
 
     <module>
         <name>localize-superquadric</name>
+        <parameters>--remove-outliers "(0.01 10)"</parameters>
         <node>localhost</node>
     </module>
 
